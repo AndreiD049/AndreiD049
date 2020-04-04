@@ -1,2 +1,2 @@
 # AndreiD049
-fullstack
+https://fullstackopen.com/ exercises;
