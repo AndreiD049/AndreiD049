@@ -46,16 +46,31 @@ const Statistics = ({metrics}) => {
   return (
     <div>
       <h3>Statistics</h3>
-      <Statistic text="good" value={metrics.good}/>
-      <Statistic text="neutral" value={metrics.neutral}/>
-      <Statistic text="bad" value={metrics.bad}/>
-      <Statistic text="all" value={all}/>
-      <Statistic text="average" value={average}/>
-      <Statistic text="positive" value={positive}/>
+      <table>
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <Statistic text="good" value={metrics.good}/>
+          <Statistic text="neutral" value={metrics.neutral}/>
+          <Statistic text="bad" value={metrics.bad}/>
+          <Statistic text="all" value={all}/>
+          <Statistic text="average" value={Number(average).toFixed(3)}/>
+          <Statistic text="positive" value={Number(positive).toFixed(3)}/>
+        </tbody>
+      </table>
     </div>);
 }
 
-const Statistic = ({text, value}) => (<p>{text} {value}</p>);
+const Statistic = ({text, value}) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
+);
 
 const Button = ({title, handleClick, ...rest}) => (<button {...rest} onClick={handleClick}>{title}</button>);
 
