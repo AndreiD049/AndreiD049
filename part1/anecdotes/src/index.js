@@ -5,14 +5,25 @@ const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + mi
 
 const App = (props) => {
   const [ selected, setSelected ] = useState(0);
+  const [ votes, setVotes ] = useState(new Array(props.anecdotes.length).fill(0));
 
   const handleClick = (e) => {
     setSelected(randomInt(0, props.anecdotes.length - 1));
   }
 
+  const handleVoteClick = (e) => {
+    let copy = [...votes];
+    copy[selected] += 1;
+    setVotes(copy);
+  }
+
   return (
     <div>
-      <p>{props.anecdotes[selected]}</p>
+      <div>
+        <p>{props.anecdotes[selected]}</p>
+        <small>has {votes[selected]} votes</small>
+      </div>
+      <Button text="vote" handleClick={handleVoteClick}/>
       <Button text="next anecdote" handleClick={handleClick}/>
     </div>
   );
