@@ -6,6 +6,8 @@ const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + mi
 const App = (props) => {
   const [ selected, setSelected ] = useState(0);
   const [ votes, setVotes ] = useState(new Array(props.anecdotes.length).fill(0));
+  const max = Math.max(...votes);
+  const anecdoteWithMaxVotes = votes.indexOf(max);
 
   const handleClick = (e) => {
     setSelected(randomInt(0, props.anecdotes.length - 1));
@@ -20,11 +22,18 @@ const App = (props) => {
   return (
     <div>
       <div>
+        <h2>Anecdote of the day</h2>
         <p>{props.anecdotes[selected]}</p>
         <small>has {votes[selected]} votes</small>
       </div>
-      <Button text="vote" handleClick={handleVoteClick}/>
-      <Button text="next anecdote" handleClick={handleClick}/>
+      <div>
+        <Button text="vote" handleClick={handleVoteClick}/>
+        <Button text="next anecdote" handleClick={handleClick}/>
+      </div>
+      <div>
+        <h2>Anecdote with most votes</h2>
+        <p>{props.anecdotes[anecdoteWithMaxVotes]}</p>
+      </div>
     </div>
   );
 }
