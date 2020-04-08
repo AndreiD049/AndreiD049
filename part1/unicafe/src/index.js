@@ -39,18 +39,23 @@ const Statistics = ({metrics}) => {
   const average = (metrics.good - metrics.bad) / all || 0;
   const positive = metrics.good / all * 100 || 0;
 
+  if (all === 0) {
+    return (<div>No feedback given</div>);
+  }
+
   return (
     <div>
       <h3>Statistics</h3>
-      <p>good {metrics.good}</p>
-      <p>neutral {metrics.neutral}</p>
-      <p>bad {metrics.bad}</p>
-      <p>all {all}</p>
-      <p>average {Number(average).toFixed(3)}</p>
-      <p>positive {Number(positive).toFixed(3)}</p>
-    </div>
-  );
+      <Statistic text="good" value={metrics.good}/>
+      <Statistic text="neutral" value={metrics.neutral}/>
+      <Statistic text="bad" value={metrics.bad}/>
+      <Statistic text="all" value={all}/>
+      <Statistic text="average" value={average}/>
+      <Statistic text="positive" value={positive}/>
+    </div>);
 }
+
+const Statistic = ({text, value}) => (<p>{text} {value}</p>);
 
 const Button = ({title, handleClick, ...rest}) => (<button {...rest} onClick={handleClick}>{title}</button>);
 
