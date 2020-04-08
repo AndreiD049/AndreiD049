@@ -1,0 +1,30 @@
+.good {
+    background-color: greenyellow;
+}
+
+.neutral {
+    background-color: orange;
+}
+
+.bad {
+    background-color: lightcoral;
+}
+
+.btn_container {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 50px;
+}
+
+.btn {
+    padding: 5px;
+    border: none;
+    margin-right: 5px;
+    box-shadow: gray 1px 2px 5px 1px;
+    cursor: pointer;
+}
+
+.btn:active {
+    margin-top: 3px;
+}
