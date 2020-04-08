@@ -35,12 +35,19 @@ const App = () => {
 };
 
 const Statistics = ({metrics}) => {
+  const all = metrics.good + metrics.neutral + metrics.bad;
+  const average = (metrics.good - metrics.bad) / all || 0;
+  const positive = metrics.good / all * 100 || 0;
+
   return (
     <div>
       <h3>Statistics</h3>
       <p>good {metrics.good}</p>
       <p>neutral {metrics.neutral}</p>
       <p>bad {metrics.bad}</p>
+      <p>all {all}</p>
+      <p>average {Number(average).toFixed(3)}</p>
+      <p>positive {Number(positive).toFixed(3)}</p>
     </div>
   );
 }
