@@ -18,7 +18,8 @@ const App = (props) => {
     copy[selected] += 1;
     setVotes(copy);
   }
-
+  debugger;
+  console.log("test");
   return (
     <div>
       <div>
