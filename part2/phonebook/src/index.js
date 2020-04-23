@@ -1,17 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
+import axios from "axios";
 import PeopleList from "./components/PeopleList";
 import PhoneBookFilter from "./components/PhoneBookFilter";
 import PhonebookForm from "./components/PhonebookForm";
 
 const App = (props) => {
-  const [persons, setPersons] = useState([
-    { name: "Max Payne", number: "+37360556795" },
-    { name: "Karl Marx", number: "+37360556795" },
-    { name: "Kayne West", number: "+37360556795" },
-    { name: "Sosi Pisos", number: "+37360556795" },
-    { name: "Vladimir Putin", number: "+37360556795" }
-  ]);
+  const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterValue, setFilterValue] = useState("");
@@ -19,7 +14,17 @@ const App = (props) => {
   let personsToShow = filterValue ?
                       filterBy(filterValue) :
                       persons;
-                      
+  
+  // fetch data on startup
+  useEffect(() => {
+    axios
+      .get("http://localhost:3001/persons")
+        .then(response => {
+          setPersons(response.data);
+        })
+  }, []);
+  
+  // controlled input + filter value
   const handleFilter = (e) => {
     const value = e.target.value;
     setFilterValue(value);
@@ -28,7 +33,7 @@ const App = (props) => {
 
   function filterBy(value) {
     // pattern for matching the filtered value
-    const regExp = new RegExp(`.*${value}.*`, "gi");
+    const regExp = new RegExp(`.*${value}.*`, "i");
     // return a new array with only filtered people
     const filteredList = persons.filter((person) => {
       return regExp.test(person.name);
