@@ -1,11 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import ReactDOM from 'react-dom';
-import axios from "axios";
 import PeopleList from "./components/PeopleList";
 import PhoneBookFilter from "./components/PhoneBookFilter";
 import PhonebookForm from "./components/PhonebookForm";
+import personsService from "./services/persons";
 
-const App = (props) => {
+const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
@@ -17,10 +17,10 @@ const App = (props) => {
   
   // fetch data on startup
   useEffect(() => {
-    axios
-      .get("http://localhost:3001/persons")
-        .then(response => {
-          setPersons(response.data);
+    personsService
+      .getAll()
+        .then(persons => {
+          setPersons(persons);
         })
   }, []);
   
@@ -56,25 +56,61 @@ const App = (props) => {
     return newNumber.replace(regExp, "");
   }
 
-  const handleSubmit = (e) => {
+  const handlePersonRemove = (person) => {
+    const answer = window.confirm(`Remove ${person.name}?`);
+    if (answer) {
+      personsService
+        .remove(person.id)
+          .then(() => {
+            setPersons(persons.filter(p => p.id !== person.id));
+          })
+          .catch(err => alert(`Error deleting person with id ${person.id}`));
+    }
+  }
+
+  const handlePersonUpdate = (id, newPerson) => {
+    personsService
+      .update(id, newPerson)
+        .then(updatedPerson => {
+          setPersons(persons.map(person => person.id === id ? updatedPerson : person));
+        });
+  }
+
+  const handlePersonAdd = (e) => {
+    function cleanup() {
+      setNewName("");
+      setNewNumber("");
+      setFilterValue("");
+    }
+
     e.preventDefault();
+    
+    // do nothing if the input is empty
     if (!newName) return;
+    
+    let newPerson = {
+      name: newName,
+      number: sanitizeNumber(newNumber)
+    };
+
     if (!validatePerson(newName)) {
-      alert(`${newName} is already added to the phonebook.`);
+      if (window.confirm(`${newName} is already in the list. Replace the old number with a new one?`)) {
+        const currentPerson = persons.find(person => person.name === newName);
+        handlePersonUpdate(currentPerson.id, newPerson);
+        cleanup();
+      }
       return;
     }
     if (!validateNumber(newNumber)) {
       alert(`${newNumber} is not valid.`);
       return;
     }
-    let newPerson = {
-      name: newName,
-      number: sanitizeNumber(newNumber)
-    };
-    setPersons(persons.concat(newPerson));
-    setNewName("");
-    setNewNumber("");
-    setFilterValue("");
+    personsService
+      .create(newPerson)
+        .then(addedPerson => {
+          setPersons(persons.concat(addedPerson));
+          cleanup();
+        });
   }
 
   const handleNameChange = (e) => {
@@ -97,12 +133,12 @@ const App = (props) => {
                      handleNameChange={handleNameChange} 
                      newNumber={newNumber} 
                      handleNumberChange={handleNumberChange} 
-                     handleSubmit={handleSubmit} 
+                     handleSubmit={handlePersonAdd} 
       />
 
       <h2>Numbers</h2>
       
-      <PeopleList persons={personsToShow}/>
+      <PeopleList persons={personsToShow} removeHandler={handlePersonRemove}/>
     </div>
   );
 }

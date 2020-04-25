@@ -1,7 +1,11 @@
 import React from "react";
 
-const PeopleList = ({persons}) => (
-  persons.map(person => (<div key={person.name}>{person.name} - {person.number}</div>))
+const Person = ({person, removeHandler}) => {
+  return (<div>{person.name} - {person.number} <button onClick={() => removeHandler(person)}>delete</button></div>);
+}
+
+const PeopleList = ({persons, removeHandler}) => (
+  persons.map(person => (<Person key={person.name} person={person} removeHandler={removeHandler}/>))
 );
 
 export default PeopleList;
