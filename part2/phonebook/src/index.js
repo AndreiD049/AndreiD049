@@ -3,13 +3,17 @@ import ReactDOM from 'react-dom';
 import PeopleList from "./components/PeopleList";
 import PhoneBookFilter from "./components/PhoneBookFilter";
 import PhonebookForm from "./components/PhonebookForm";
+import Notification from "./components/Notification";
 import personsService from "./services/persons";
+import "./style.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterValue, setFilterValue] = useState("");
+  const [notifyMessage, setNotifyMessage] = useState(null);
+  const [notifyType, setNotifyType] = useState("info");
 
   let personsToShow = filterValue ?
                       filterBy(filterValue) :
@@ -24,6 +28,15 @@ const App = () => {
         })
   }, []);
   
+  // Show a notification message of a given time for some time
+  const showNotification = (message, type, timeout) => {
+    setNotifyType(type);
+    setNotifyMessage(message);
+    setTimeout(() => {
+      setNotifyMessage(null);
+    }, timeout);
+  }
+
   // controlled input + filter value
   const handleFilter = (e) => {
     const value = e.target.value;
@@ -62,9 +75,14 @@ const App = () => {
       personsService
         .remove(person.id)
           .then(() => {
+            showNotification(`${person.name} was removed`, "info", 3000);
             setPersons(persons.filter(p => p.id !== person.id));
           })
-          .catch(err => alert(`Error deleting person with id ${person.id}`));
+          .catch(err => {
+            // Show error notification and remove the person from the list on client
+            showNotification(`Error deleting person - ${person.name} [${err.message}]`, "error", 5000);
+            personsService.getAll().then(allPersont => setPersons(allPersont));
+          });
     }
   }
 
@@ -72,8 +90,13 @@ const App = () => {
     personsService
       .update(id, newPerson)
         .then(updatedPerson => {
+          showNotification(`${newPerson.name} successfully updated`, "info", 3000);
           setPersons(persons.map(person => person.id === id ? updatedPerson : person));
-        });
+        })
+        .catch(err => {
+          showNotification(`Unable to update person: ${err.message}`, "error", 5000);
+          personsService.getAll().then(allPersont => setPersons(allPersont));
+        })
   }
 
   const handlePersonAdd = (e) => {
@@ -108,6 +131,7 @@ const App = () => {
     personsService
       .create(newPerson)
         .then(addedPerson => {
+          showNotification(`${addedPerson.name} was successfully added`, "info", 3000);
           setPersons(persons.concat(addedPerson));
           cleanup();
         });
@@ -124,6 +148,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+
+      <Notification message={notifyMessage} notificationType={notifyType}/>
 
       <PhoneBookFilter handleFilter={handleFilter} filterValue={filterValue}/>
 
