@@ -94,7 +94,7 @@ const App = () => {
           setPersons(persons.map(person => person.id === id ? updatedPerson : person));
         })
         .catch(err => {
-          showNotification(`Unable to update person: ${err.message}`, "error", 5000);
+          showNotification(err.response.data.error, "error", 5000);
           personsService.getAll().then(allPersont => setPersons(allPersont));
         })
   }
@@ -134,7 +134,11 @@ const App = () => {
           showNotification(`${addedPerson.name} was successfully added`, "info", 3000);
           setPersons(persons.concat(addedPerson));
           cleanup();
-        });
+        })
+        .catch(err => {
+          // console.log(err.response);
+          showNotification(err.response.data.error, "error", 5000);
+        })
   }
 
   const handleNameChange = (e) => {
