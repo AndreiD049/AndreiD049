@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
-const mongooseUniqueValidator = require("mongoose-unique-validator");
+const mongoose = require('mongoose');
+const mongooseUniqueValidator = require('mongoose-unique-validator');
 
 const blogSchema = mongoose.Schema({
   title: {
     type: String,
-    unique: true
+    unique: true,
+    required: true,
   },
   author: {
     type: String,
@@ -13,12 +14,24 @@ const blogSchema = mongoose.Schema({
   url: {
     type: String,
     match: /^(www\.)?\w*\.\w{2,10}/i,
+    retuired: true,
   },
-  likes: Number
+  likes: {
+    type: Number,
+    default: 0,
+  },
 });
 
 blogSchema.plugin(mongooseUniqueValidator);
 
-const Blog = mongoose.model("Blog", blogSchema);
+blogSchema.set('toJSON', {
+  transform: (doc, returnedObj) => {
+    returnedObj.id = returnedObj._id.toString();
+    delete returnedObj._id;
+    delete returnedObj.__v;
+  }
+});
+
+const Blog = mongoose.model('Blog', blogSchema);
 
 module.exports = Blog;

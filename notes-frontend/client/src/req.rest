@@ -1,0 +1,7 @@
+PUT https://fathomless-tundra-50035.herokuapp.com/api/notes/7
+Content-Type: application/json
+
+{
+    "content": "test",
+    "important": false
+}

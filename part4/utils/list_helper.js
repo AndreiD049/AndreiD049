@@ -1,4 +1,4 @@
-const _ = require("lodash");
+const _ = require('lodash');
 
 const dummy = (blogs) => {
   return 1;
@@ -17,16 +17,16 @@ const favoriteBlog = (blogs) => {
 };
 
 const mostBlogs = (blogs) => {
-  return (_.maxBy(_.toPairs(_.groupBy(blogs, "author")), (blog) => blog[1].length) || [""])[0];
+  return (_.maxBy(_.toPairs(_.groupBy(blogs, 'author')), (blog) => blog[1].length) || [''])[0];
 };
 
 const mostLikes = (blogs) => {
-  const mostLikesAuthors = _.orderBy(_.toPairs(_.mapValues(_.groupBy(blogs, "author"), (value) => {
+  const mostLikesAuthors = _.orderBy(_.toPairs(_.mapValues(_.groupBy(blogs, 'author'), (value) => {
     return _.sumBy(value, (o) => o.likes);
-  })), (o) => o[1], "desc");
+  })), (o) => o[1], 'desc');
   return mostLikesAuthors.length === 0
     ? {}
-    : { "author": mostLikesAuthors[0][0], "likes": mostLikesAuthors[0][1] };
+    : { 'author': mostLikesAuthors[0][0], 'likes': mostLikesAuthors[0][1] };
 };
 
 module.exports = {
