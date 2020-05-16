@@ -14,12 +14,17 @@ const blogSchema = mongoose.Schema({
   url: {
     type: String,
     match: /^(www\.)?\w*\.\w{2,10}/i,
-    retuired: true,
+    required: true,
   },
   likes: {
     type: Number,
     default: 0,
   },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  }
 });
 
 blogSchema.plugin(mongooseUniqueValidator);

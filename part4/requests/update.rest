@@ -1,0 +1,6 @@
+PUT http://localhost:3001/api/blogs/5eac7a4c1756d52928816d13
+Content-Type: application/json
+
+{
+  "author": "Chertila2"
+}

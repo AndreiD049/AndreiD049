@@ -1,0 +1,24 @@
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "root",
+  "name": "Andrei Dimitrascu",
+  "password": "dummypassword"
+}
+
+###
+
+POST http://localhost:3001/api/users
+Content-Type: application/json
+
+{
+  "username": "rast982",
+  "name": "Andrei Dimitrascu",
+  "password": "1234567"
+}
+
+
+###
+
+GET http://localhost:3001/api/users
